@@ -7,9 +7,11 @@ module.exports = (app) => {
   app.use('/', router);
 };
 
-router.get('/', (req, res, next) => {
-  Article.find((err, articles) => {
-    if (err) return next(err);
-    return res.json(articles);
-  });
+router.get('/', async (req, res, next) => {
+  let article = new Article();
+  article.title = "test";
+  await article.save();
+  
+  let articles =   await Article.find();
+  return res.json(articles);
 });

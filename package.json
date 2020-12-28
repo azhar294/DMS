@@ -4,11 +4,8 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "NODE_ENV=test mocha --recursive test",
-    "test:coverage": "nyc npm test",
-    "test:unit": "mocha --recursive test/middleware test/models test/routes",
-    "test:integration": "mocha --recursive test/integration"
+    "start": "node server.js",
+    "test": "jest --detectOpenHandles --forceExit --coverage"
   },
   "dependencies": {
     "express": "^4.13.3",
@@ -16,6 +13,12 @@
     "body-parser": "^1.13.3",
     "glob": "^6.0.4",
     "mongoose": "^4.1.2"
-    },
-  "devDependencies": {}
+  },
+  "devDependencies": {
+    "eslint": "^7.3.1",
+    "jest": "^26.2.2",
+    "jest-sonar": "^0.2.10",
+    "mongodb-memory-server": "^6.6.3",
+    "supertest": "^6.0.1"
+  }
 }
