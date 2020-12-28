@@ -13,6 +13,7 @@ module.exports = (app) => {
 
 // routes
 router.post('/create', authorize(), validateCreateRequest, asyncHandler(create));
+router.patch('/move', authorize(), validateMoveRequest, asyncHandler(moveFile));
 
 function validateCreateRequest(req, res, next) {
   const schema = Joi.object({
@@ -29,4 +30,20 @@ async function create(req, res, next) {
   await documentService.createDocument({name, type, rootDir, content, user: req.user._id});
   res.json({message: `${type} created successfully`});
 
+}
+
+
+function validateMoveRequest(req, res, next) {
+  const schema = Joi.object({
+    file: Joi.string().required(),
+    folder: Joi.string().allow('', null).default(null)
+  });
+  validateRequest(req, next, schema);
+}
+
+
+async function moveFile(req, res, next) {
+  const {file, folder} = req.body;
+  await documentService.moveFile({file, folder, user: req.user._id});
+  res.json({message: `File moved successfully`});
 }

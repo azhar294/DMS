@@ -48,7 +48,7 @@ describe('Testing document related APIs', () => {
 
     it('should return 400 if the request is invalid', async () => {
       //given
-      await request(app).post('/user/register').send({userName: "test", password: "1234"});
+      await createUser({userName: "test", password: "1234"});
       const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
 
       //when
@@ -95,6 +95,103 @@ describe('Testing document related APIs', () => {
           name: 'test',
           type: 'Folder',
           rootDir: document._id
+        });
+      //then
+      expect(res.statusCode).toEqual(400);
+    });
+
+  });
+
+  describe('Testing document move API', () => {
+    it('should return 200 and move the file to folder', async () => {
+      let user = await createUser({userName: "test", password: "1234"});
+      const folder = await createDocument({name: 'test', type: 'Folder', createdBy: user._id});
+      const file = await createDocument({name: 'test', type: 'File', content: 'abc', createdBy: user._id});
+
+      const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
+
+      //when
+      const res = await request(app)
+        .patch('/document/move')
+        .set('Authorization', 'bearer ' + tokenRes.body.jwtToken)
+        .send({
+          file: file._id,
+          folder: folder._id
+        });
+      //then
+      expect(res.statusCode).toEqual(200);
+    });
+
+    it('should return 200 and move the file to root folder', async () => {
+      let user = await createUser({userName: "test", password: "1234"});
+      const folder = await createDocument({name: 'test', type: 'Folder', createdBy: user._id});
+      const file = await createDocument({
+        name: 'test',
+        type: 'File',
+        content: 'abc',
+        createdBy: user._id,
+        rootDir: folder._id
+      });
+
+      const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
+
+      //when
+      const res = await request(app)
+        .patch('/document/move')
+        .set('Authorization', 'bearer ' + tokenRes.body.jwtToken)
+        .send({
+          file: file._id
+        });
+      //then
+      expect(res.statusCode).toEqual(200);
+    });
+
+
+    it('should return 401 if jwt token is missing in header', async () => {
+      //given
+      let user = await createUser({userName: "test", password: "1234"});
+      const folder = await createDocument({name: 'test', type: 'Folder', createdBy: user._id});
+      const file = await createDocument({name: 'test', type: 'File', content: 'abc', createdBy: user._id});
+
+      //when
+      const res = await request(app)
+        .patch('/document/move')
+        .send({
+          file: file._id,
+          folder: folder._id
+        });
+      //then
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it('should return 400 if the request is invalid', async () => {
+      //given
+      await createUser({userName: "test", password: "1234"});
+      const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
+
+      //when
+      const res = await request(app)
+        .patch('/document/move')
+        .set('Authorization', 'bearer ' + tokenRes.body.jwtToken)
+        .send({});
+      //then
+      expect(res.statusCode).toEqual(400);
+    });
+
+
+    it('should return 400 if the file or folder not exist', async () => {
+      //given
+      let user = await createUser({userName: "test", password: "1234"});
+      const folder = await createDocument({name: 'test', type: 'Folder', createdBy: user._id});
+      const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
+
+      //when
+      const res = await request(app)
+        .patch('/document/move')
+        .set('Authorization', 'bearer ' + tokenRes.body.jwtToken)
+        .send({
+          file: folder._id, // invalid file id
+          folder: folder._id
         });
       //then
       expect(res.statusCode).toEqual(400);

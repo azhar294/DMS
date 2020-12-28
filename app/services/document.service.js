@@ -3,7 +3,8 @@ const EntityExistError = require('../../errors/entity-exist-error');
 const BadRequestError = require('../../errors/bad-request-error');
 
 module.exports = {
-  createDocument
+  createDocument,
+  moveFile
 };
 
 async function createDocument(params) {
@@ -33,4 +34,23 @@ async function createDocument(params) {
 
 }
 
+
+async function moveFile(params) {
+  let promiseArr = [];
+  let fileMatchCriteria = {createdBy: params.user, _id: params.file, type: 'File'};
+  promiseArr.push(documentRepository.findOne(fileMatchCriteria));
+  if (params.folder) {
+    let folderMatchCriteria = {createdBy: params.user, _id: params.folder, type: 'Folder'};
+    promiseArr.push(documentRepository.findOne(folderMatchCriteria));
+  }
+
+  let [fileExist, folderExists] = await Promise.all(promiseArr);
+  if (!fileExist || (params.folder != null && !folderExists)) {
+    throw new BadRequestError('File/Folder not Exist', 400)
+  }
+
+  //update file
+  fileExist.rootDir = params.folder;
+  await fileExist.save();
+}
 
