@@ -11,7 +11,7 @@ module.exports = (app) => {
 
 // routes
 router.post('/register', validateUserSchema, register);
-
+router.post('/authenticate', authenticateSchema, authenticate);
 
 function validateUserSchema(req, res, next) {
   const schema = Joi.object({
@@ -29,4 +29,24 @@ async function register(req, res, next) {
   } catch (err) {
     next(err);
   }
+}
+
+
+
+function authenticateSchema(req, res, next) {
+    const schema = Joi.object({
+        userName: Joi.string().required(),
+        password: Joi.string().required()
+    });
+    validateRequest(req, next, schema);
+}
+
+async function authenticate(req, res, next) {
+    const { userName, password } = req.body;
+    try {
+    res.json(await userService.authenticate({ userName, password }));
+    } catch(err){
+        next(err);
+    }
+
 }
