@@ -3,6 +3,7 @@ const router = express.Router();
 const Joi = require('joi');
 const validateRequest = require('../../helpers/validate-request');
 const userService = require('../services/user.service');
+const asyncHandler = require('express-async-handler');
 
 
 module.exports = (app) => {
@@ -10,8 +11,8 @@ module.exports = (app) => {
 };
 
 // routes
-router.post('/register', validateUserSchema, register);
-router.post('/authenticate', authenticateSchema, authenticate);
+router.post('/register', validateUserSchema, asyncHandler(register));
+router.post('/authenticate', authenticateSchema, asyncHandler(authenticate));
 
 function validateUserSchema(req, res, next) {
   const schema = Joi.object({
@@ -23,30 +24,20 @@ function validateUserSchema(req, res, next) {
 
 async function register(req, res, next) {
   const {userName, password} = req.body;
-  try {
-    await userService.register({userName, password});
-    res.json({message: 'user account created successfully'});
-  } catch (err) {
-    next(err);
-  }
+  await userService.register({userName, password});
+  res.json({message: 'user account created successfully'});
 }
-
 
 
 function authenticateSchema(req, res, next) {
-    const schema = Joi.object({
-        userName: Joi.string().required(),
-        password: Joi.string().required()
-    });
-    validateRequest(req, next, schema);
+  const schema = Joi.object({
+    userName: Joi.string().required(),
+    password: Joi.string().required()
+  });
+  validateRequest(req, next, schema);
 }
 
 async function authenticate(req, res, next) {
-    const { userName, password } = req.body;
-    try {
-    res.json(await userService.authenticate({ userName, password }));
-    } catch(err){
-        next(err);
-    }
-
+  const {userName, password} = req.body;
+  res.json(await userService.authenticate({userName, password}));
 }

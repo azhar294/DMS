@@ -1,8 +1,7 @@
 const dbHandler = require('../db-handler');
 const app = require('../../app.js');
 const request = require('supertest');
-const userRepository = require('../../app/repositories/user-repository');
-const {expect} = require('@jest/globals');
+const {createUser} = require('../utils/user-util.js');
 
 
 describe('Testing user related APIs', () => {
@@ -34,7 +33,7 @@ describe('Testing user related APIs', () => {
 
     it('should return 409 if the userName already exist', async () => {
       //given
-      await userRepository.create({userName: "test123", passwordHash: "saew4r4535@4afda"});
+      await createUser({userName: "test123", password: "1234"});
       //when
       const res = await request(app).post('/user/register').send({userName: "test123", password: "1234"});
       //then
@@ -54,7 +53,7 @@ describe('Testing user related APIs', () => {
 
     it('should return 200 and jwt token for correct username and password', async () => {
       //given
-      await request(app).post('/user/register').send({userName: "test123", password: "1234"});
+      await createUser({userName: "test123", password: "1234"});
       //when
       const res = await request(app).post('/user/authenticate').send({userName: "test123", password: "1234"});
       //then
