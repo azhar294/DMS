@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const Article = mongoose.model('Article');
+const asyncHandler = require('express-async-handler');
+const articleRepository = require('../repositories/article-repository')
+
 
 module.exports = (app) => {
   app.use('/', router);
 };
 
-router.get('/', async (req, res, next) => {
-  let article = new Article();
-  article.title = "test";
-  await article.save();
-  
-  let articles =   await Article.find();
+router.get('/', asyncHandler(async (req, res, next) => {
+  let article = {title: 'test'};
+  await articleRepository.create(article);
+  let articles = await articleRepository.find();
   return res.json(articles);
-});
+}));

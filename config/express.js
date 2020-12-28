@@ -1,10 +1,8 @@
 const glob = require('glob');
-const logger = require('morgan');
 const bodyParser = require('body-parser');
+const errorHandlerMiddleware = require('../helpers/error-handler');
 
 module.exports = (app, config) => {
-  const env = process.env.NODE_ENV || 'development';
-  app.use(logger('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
     extended: true
@@ -14,5 +12,8 @@ module.exports = (app, config) => {
   controllers.forEach((controller) => {
     require(controller)(app);
   });
+
+  app.use(errorHandlerMiddleware);
+
   return app;
 };

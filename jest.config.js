@@ -10,6 +10,8 @@ module.exports =  {
         "<rootDir>/tests",
         "<rootDir>/config",
         "<rootDir>/app/models",
+        "<rootDir>/helpers",
+        "<rootDir>/errors",
         "server.js",
         "app.js"
     ],
