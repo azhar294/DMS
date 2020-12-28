@@ -17,6 +17,7 @@
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^4.1.2",
+    "mongoose-erd": "^1.0.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
