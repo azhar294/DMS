@@ -8,6 +8,9 @@ const config = {
     app: {
       name: 'dms'
     },
+    jwt : {
+      secret : "secret"
+    },
     port: process.env.PORT || 3000,
     db: 'mongodb://mongo:27017/dms-development'
   },
@@ -17,6 +20,9 @@ const config = {
     app: {
       name: 'dms'
     },
+    jwt : {
+      secret : "secret"
+    },
     port: process.env.PORT || 3000,
     db: 'mongodb://localhost:27017/dms-test'
   },
@@ -25,6 +31,9 @@ const config = {
     root: rootPath,
     app: {
       name: 'dms'
+    },
+    jwt : {
+      secret : "secret"
     },
     port: process.env.PORT || 3000,
     db: 'mongodb://localhost:27017/dms-production'
