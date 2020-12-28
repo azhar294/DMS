@@ -1,0 +1,21 @@
+{
+  "name": "dms",
+  "version": "0.0.1",
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "NODE_ENV=test mocha --recursive test",
+    "test:coverage": "nyc npm test",
+    "test:unit": "mocha --recursive test/middleware test/models test/routes",
+    "test:integration": "mocha --recursive test/integration"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "morgan": "^1.6.1",
+    "body-parser": "^1.13.3",
+    "glob": "^6.0.4",
+    "mongoose": "^4.1.2"
+    },
+  "devDependencies": {}
+}
