@@ -14,13 +14,6 @@ Created user have 2 types super user and regular user
 - In addition to the regular user functions, a super user can:
     - Create regular users.
 
-**Documents**:
-Documents can be created and must have:
-- title
-- content
-- access; set by default to public but can be any of `private, public or role`
-
-
 **Authentication**:
 Users are authenticated and validated using JSON web token (JWT).
 Requests to protected routes are validated using the generated token.
