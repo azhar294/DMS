@@ -26,9 +26,8 @@ Users are authenticated and validated using JSON web token (JWT).
 Requests to protected routes are validated using the generated token.
 
 ## Development
-This application was developed using [NodeJs](https://nodejs.org) with express for routing. Postgres was used for persisting data with [Sequelize](https://sequelizejs.org) as [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping).
+This application was developed using [NodeJs](https://nodejs.org) with express for routing. MongoDb was used for persisting data with [Mongoose](https://mongoosejs.com) as ODM.
 
-The frontend was built with the [react](https://facebook.github.io/react/) and [redux](reduxjs.org) framework.
 
 #### Technologies Used
 
