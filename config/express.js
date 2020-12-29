@@ -13,6 +13,9 @@ module.exports = (app, config) => {
     require(controller)(app);
   });
 
+  app.use('/api-docs', require('../swagger/swagger'));
+
+
   app.use(errorHandlerMiddleware);
 
   return app;
