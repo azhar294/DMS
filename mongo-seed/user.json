@@ -1,0 +1,10 @@
+{
+  "userName": "superUser1",
+  "passwordHash": "$2a$10$uhMqn.NkzJfBlOLRh/WxBuoNDHg9WR6k4n8V2b/Nf/dDhXMZd6ZCK",
+  "superUser": true
+}
+{
+  "userName": "azhar1",
+  "passwordHash": "$2a$10$uhMqn.NkzJfBlOLRh/WxBuoNDHg9WR6k4n8V2b/Nf/dDhXMZd6ZCK",
+  "superUser": false
+}

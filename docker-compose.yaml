@@ -1,0 +1,24 @@
+version: "3"
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:4.0.12
+    tmpfs: /data/db
+    ports:
+      - "27017:27017"
+
+  backend:
+    container_name: nodejs
+    restart: always
+    build: ./
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+    environment:
+      WAIT_HOSTS: mongo:27017
+
+  mongo_seed:
+    build: ./mongo-seed
+    environment:
+      WAIT_HOSTS: mongo:27017

@@ -4,6 +4,7 @@ const Joi = require('joi');
 const validateRequest = require('../../helpers/validate-request');
 const userService = require('../services/user.service');
 const asyncHandler = require('express-async-handler');
+const authorize = require('../../helpers/auth');
 
 
 module.exports = (app) => {
@@ -11,7 +12,7 @@ module.exports = (app) => {
 };
 
 // routes
-router.post('/register', validateUserSchema, asyncHandler(register));
+router.post('/register', authorize(true), validateUserSchema, asyncHandler(register));
 router.post('/authenticate', authenticateSchema, asyncHandler(authenticate));
 
 function validateUserSchema(req, res, next) {
