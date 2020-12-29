@@ -4,16 +4,17 @@ const BadRequestError = require('../../errors/bad-request-error');
 
 module.exports = {
   createDocument,
-  moveFile
+  moveFile,
+  listDocuments
 };
 
 async function createDocument(params) {
   let matchCriteria = {createdBy: params.user, name: params.name, type: params.type};
-  if (params.rootDir) {
+  if (params.parentDir) {
     if (params.type === 'Folder') {
       throw new BadRequestError("Nested folder not supported as of now", 400);
     }
-    matchCriteria.rootDir = params.rootDir;
+    matchCriteria.parentDir = params.parentDir;
   }
   // validate
   if (await documentRepository.findOne(matchCriteria)) {
@@ -26,7 +27,7 @@ async function createDocument(params) {
     type: params.type,
     createdBy: params.user,
     content: params.content ? params.content : null,
-    rootDir: params.rootDir
+    parentDir: params.parentDir
   };
 
   // save document
@@ -50,7 +51,11 @@ async function moveFile(params) {
   }
 
   //update file
-  fileExist.rootDir = params.folder;
+  fileExist.parentDir = params.folder;
   await fileExist.save();
 }
 
+
+async function listDocuments(params) {
+  return await documentRepository.find({parentDir: params.folder, createdBy: params.user}, '-createdBy -parentDir', {lean: true});
+}

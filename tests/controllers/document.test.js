@@ -94,7 +94,7 @@ describe('Testing document related APIs', () => {
         .send({
           name: 'test',
           type: 'Folder',
-          rootDir: document._id
+          parentDir: document._id
         });
       //then
       expect(res.statusCode).toEqual(400);
@@ -130,7 +130,7 @@ describe('Testing document related APIs', () => {
         type: 'File',
         content: 'abc',
         createdBy: user._id,
-        rootDir: folder._id
+        parentDir: folder._id
       });
 
       const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
@@ -197,6 +197,30 @@ describe('Testing document related APIs', () => {
       expect(res.statusCode).toEqual(400);
     });
 
+  });
+
+
+  describe('Testing document list API', () => {
+
+    it('should return 200 and return array of documents', async () => {
+      let user = await createUser({userName: "test", password: "1234"});
+      let folder = await createDocument({name: 'test', type: 'Folder', createdBy: user._id});
+      await createDocument({name: 'test', type: 'File', content: 'abc', createdBy: user._id});
+      await createDocument({name: 'test1', type: 'File', content: 'abcd', createdBy: user._id, parentDir: folder._id});
+
+      const tokenRes = await request(app).post('/user/authenticate').send({userName: "test", password: "1234"});
+
+      //when
+      const res = await request(app)
+        .get('/document/list')
+        .set('Authorization', 'bearer ' + tokenRes.body.jwtToken)
+        .query({
+          folder: folder._id.toString()
+        });
+      //then
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.length).toEqual(1);
+    });
   });
 
 });

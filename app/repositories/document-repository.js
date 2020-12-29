@@ -6,6 +6,9 @@ const documentRepository = {
   },
   findOne: (where, select = null, opts = {}, populate = []) => {
     return Document.findOne(where, select, opts).populate(populate);
+  },
+  find: (where, select = null, opts = {}, populate = []) => {
+    return Document.find(where, select, opts).populate(populate);
   }
 };
 
