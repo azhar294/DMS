@@ -12,6 +12,7 @@ module.exports =  {
         "<rootDir>/app/models",
         "<rootDir>/helpers",
         "<rootDir>/errors",
+        "<rootDir>/swagger",
         "server.js",
         "app.js"
     ],
